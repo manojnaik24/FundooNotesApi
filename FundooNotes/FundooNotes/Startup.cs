@@ -98,7 +98,7 @@ namespace FundooNotes
                 app.UseDeveloperExceptionPage();
             }
 
-
+            app.UseAuthentication();
             app.UseHttpsRedirection();
 
             app.UseRouting();

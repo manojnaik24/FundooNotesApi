@@ -1,10 +1,12 @@
 ﻿using BussinessLayer.Interfaces;
 using BussinessLayer.Services;
 using CommonLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.Entity;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FundooNotes.Controllers
 {
@@ -90,14 +92,14 @@ namespace FundooNotes.Controllers
             }
 
         }
-
+        [Authorize]
         [HttpPut]
         [Route("Reset Password")]
 
-        public IActionResult ResetPassword(string Email,resetPassword reset)
+        public IActionResult ResetPassword(resetPassword reset)
         {
-
-            var result = userBuissnes.ResetPassword(Email,reset);
+            string email = User.Claims.FirstOrDefault(x => x.Type == "Email").Value;
+            var result = userBuissnes.ResetPassword(email,reset);
 
             if (result != null)
             {
