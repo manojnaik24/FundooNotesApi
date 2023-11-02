@@ -29,6 +29,7 @@ namespace RepositoryLayer.Services
 
         public UserEntity UserRegisteration(RegisterModel model)
         {
+            
             UserEntity entity = new UserEntity();
             entity.First_Name = model.First_Name;
             entity.Last_Name = model.Last_Name;
@@ -164,7 +165,6 @@ namespace RepositoryLayer.Services
                 return false;
             }
         }
-       
-
+      
     }
 }

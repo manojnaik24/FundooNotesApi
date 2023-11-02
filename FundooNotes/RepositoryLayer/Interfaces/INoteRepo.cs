@@ -10,5 +10,9 @@ namespace RepositoryLayer.Interfaces
 
         public List<NoteEntity> PrintAllDetail();
 
+        public bool Upadate(int NoteId, int Id, NoteModel note);
+
+        public bool delete(int NoteId, int Id);
+
     }
 }

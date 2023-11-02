@@ -24,5 +24,13 @@ namespace BussinessLayer.Services
         {
             return noteRepo.PrintAllDetail();
         }
+        public bool Upadate(int NoteId, int Id, NoteModel note)
+        {
+            return noteRepo.Upadate(NoteId, Id, note);
+        }
+        public bool delete(int NoteId, int Id)
+        {
+            return noteRepo.delete(NoteId, Id);
+        }
     }
 }

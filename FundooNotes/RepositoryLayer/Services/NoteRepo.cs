@@ -25,6 +25,7 @@ namespace RepositoryLayer.Services
         {
 
         NoteEntity entity = new NoteEntity();
+            
             entity.Title = model.Title;
             entity.Note = model.Note;
             entity.UpdatedAt = model.UpdateAt;
@@ -37,15 +38,17 @@ namespace RepositoryLayer.Services
             entity.Reminder= model.Reminder;
             entity.Id = Id; 
            fundooContext.Note.Add(entity);
-            var result = fundooContext.SaveChanges();
-            if (result > 0)
-            {
-                return entity;
-            }
-            else
-            {
-                return null;
-            }
+           
+                var result = fundooContext.SaveChanges();
+                if (result > 0)
+                {
+                    return entity;
+                }
+                else
+                {
+                    return null;
+                }
+            
             
         }
         public List<NoteEntity> PrintAllDetail()
@@ -54,6 +57,52 @@ namespace RepositoryLayer.Services
             return result;
         }
 
+        public bool Upadate(int NoteId,int Id,NoteModel note)
+        {
+            var result=fundooContext.Note.FirstOrDefault(x=>x.NoteId == NoteId || x.Id==Id);
+
+            if (result != null)
+            {
+                if (note.Title != null)
+                {
+                    result.Title = note.Title;
+                }
+                if (note != null)
+                {
+                  result.Note = note.Note;
+                }
+                if (note.Color != null)
+                {
+                    result.Color = note.Color;
+                }
+                if (note.Image != null)
+                {
+                    result.Image = note.Image;
+                }
+               
+                result.Modifieder=DateTime.Now;
+                fundooContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool delete(int NoteId,int Id) { 
+
+            var result=fundooContext.Note.FirstOrDefault(x=>x.Equals(Id)||x.Equals(NoteId));
+            if (result != null)
+            {
+                fundooContext.Note.Remove(result);
+                fundooContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }

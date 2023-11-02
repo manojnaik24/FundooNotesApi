@@ -52,6 +52,5 @@ namespace BussinessLayer.Services
             return userRepo.ResetPassword(Email, reset);
         }
 
-
     }
 }

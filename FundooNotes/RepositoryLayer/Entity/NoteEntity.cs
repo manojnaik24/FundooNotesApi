@@ -9,6 +9,8 @@ namespace RepositoryLayer.Entity
 {
     public class NoteEntity
     {
+        internal DateTime Modifieder;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int NoteId { get; set; }

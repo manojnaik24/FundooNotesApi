@@ -39,6 +39,8 @@ namespace FundooNotes
             services.AddDbContext<FundoDbContext>(a => a.UseSqlServer(Configuration["ConnectionStrings:FundooDB"]));
             services.AddTransient<IUserRepo, UserRepo>();
             services.AddTransient<IUserBussines, UserBussines>();
+            services.AddTransient<INoteBussiness, NoteBussiness>();
+            services.AddTransient<INoteRepo, NoteRepo>();
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });

@@ -9,5 +9,9 @@ namespace BussinessLayer.Interfaces
         NoteEntity noteInput(NoteModel model, int Id);
 
         public List<NoteEntity> PrintAllDetail();
+        public bool Upadate(int NoteId, int Id, NoteModel model);
+
+        public bool delete(int NoteId, int Id);
+
     }
 }

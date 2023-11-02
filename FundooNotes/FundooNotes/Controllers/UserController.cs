@@ -4,6 +4,7 @@ using CommonLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RepositoryLayer.Entity;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,18 @@ namespace FundooNotes.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserBussines userBuissnes;
-
-        public UserController(IUserBussines userBuissnes)
+        private readonly ILogger<UserController> logger;
+        public UserController(IUserBussines userBuissnes,ILogger<UserController> logger)
         {
             this.userBuissnes = userBuissnes;
+            this.logger = logger;
         }
 
         [HttpPost]
         [Route("register")]
         public IActionResult Registration(RegisterModel model)
         {
+            logger.LogInformation("Registration started");
             var IsEmailExists = userBuissnes.IsEmailExisting(model.Email);
             if (IsEmailExists)
             {
@@ -35,10 +38,14 @@ namespace FundooNotes.Controllers
                 var result = userBuissnes.UserRegisteration(model);
                 if (result != null)
                 {
+                    logger.LogInformation("Registration is done Successfull.");
+
                     return Ok(new ResponseModel<UserEntity> { status = true, message = "Registration successfull", data = result });
                 }
                 else
                 {
+                    logger.LogInformation("Registration is faild.");
+
                     return BadRequest(new ResponseModel<UserEntity> { status = false, message = "registraion failed" });
                 }
             }
@@ -48,13 +55,17 @@ namespace FundooNotes.Controllers
         [Route("login")]
         public IActionResult Login(LoginModel login)
         {
+            logger.LogInformation("Login started");
             var result = userBuissnes.UserLogin(login);
             if (result !=null)
             {
+                logger.LogInformation("Login SuccessFull");
+
                 return Ok( new ResponseModel<string> { status=true,message="Login SuccessFull",data=result});
             }
             else
             {
+                logger.LogInformation("Login Faild");
                 return BadRequest(new ResponseModel<string> { status = false, message = "Login Faild" });
             }
         }
@@ -111,6 +122,7 @@ namespace FundooNotes.Controllers
             }
 
         }
+        
     }
 
    
