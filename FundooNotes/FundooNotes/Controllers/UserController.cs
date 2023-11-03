@@ -44,7 +44,7 @@ namespace FundooNotes.Controllers
                 }
                 else
                 {
-                    logger.LogInformation("Registration is faild.");
+                    logger.LogError("Registration is faild.");
 
                     return BadRequest(new ResponseModel<UserEntity> { status = false, message = "registraion failed" });
                 }
@@ -65,7 +65,7 @@ namespace FundooNotes.Controllers
             }
             else
             {
-                logger.LogInformation("Login Faild");
+                logger.LogError("Login Faild");
                 return BadRequest(new ResponseModel<string> { status = false, message = "Login Faild" });
             }
         }
@@ -73,16 +73,18 @@ namespace FundooNotes.Controllers
         [Route("UserInfo")]
 
         public IActionResult  GetUserData(){
-
+            logger.LogInformation("User Info");
             List<UserEntity> result = userBuissnes.PrintAllDetail();
 
             if (result != null)
             {
-                return Ok(new ResponseModel<List<UserEntity>> {status=true,message="user deatails",data=result});  
+                logger.LogInformation("User detail");
+                return Ok(new ResponseModel<List<UserEntity>> {status=true,message="user details",data=result});  
             }
             else
             {
-                return BadRequest(new ResponseModel<List<UserEntity>> { status = false, message = "not extists" });
+                logger.LogError("No detail");
+                return BadRequest(new ResponseModel<List<UserEntity>> { status = false, message = "no details" });
             }
         }
 
@@ -90,15 +92,17 @@ namespace FundooNotes.Controllers
         [Route("ForgetPassword")]
 
         public IActionResult ForGetPassword(string Email) {
-
+            logger.LogInformation("Forget password");
             var result = userBuissnes.ForgetPassword(Email);
 
             if (result != null)
             {
+                logger.LogInformation("Message sent");
                 return Ok(new ResponseModel<string> { status = true, message = "Message sent", data = result });
             }
             else
             {
+                logger.LogError("Message sent failed");
                 return BadRequest(new ResponseModel<string> { status = false, message = "Message sent Failed " });
             }
 
@@ -109,15 +113,18 @@ namespace FundooNotes.Controllers
 
         public IActionResult ResetPassword(resetPassword reset)
         {
+            logger.LogInformation("Reset password");
             string email = User.Claims.FirstOrDefault(x => x.Type == "Email").Value;
             var result = userBuissnes.ResetPassword(email,reset);
 
             if (result != null)
             {
+                logger.LogInformation("Password is Reset");
                 return Ok(new ResponseModel<string> { status = true, message = "Password is Reset "});
             }
             else
             {
+                logger.LogError("Password is not Reset");
                 return BadRequest(new ResponseModel<string> { status = false, message = "Password is not Reset " });
             }
 

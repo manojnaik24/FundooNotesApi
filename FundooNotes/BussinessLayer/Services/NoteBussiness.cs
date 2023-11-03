@@ -32,5 +32,19 @@ namespace BussinessLayer.Services
         {
             return noteRepo.delete(NoteId, Id);
         }
+        public bool isPin(int NoteId,int Id)
+        {
+            return noteRepo.isPin(NoteId,Id);
+        }
+
+
+        public bool isArchieve(int NoteId, int Id)
+        {
+            return noteRepo.isArchieve(NoteId,Id);
+        }
+        public bool isTrash(int NoteId, int Id)
+        {
+            return noteRepo.isTrash(NoteId,Id);
+        }
     }
 }

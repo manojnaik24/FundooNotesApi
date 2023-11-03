@@ -13,5 +13,10 @@ namespace BussinessLayer.Interfaces
 
         public bool delete(int NoteId, int Id);
 
+        public bool isPin(int NoteId,int Id);
+
+        public bool isArchieve(int NoteId, int Id);
+
+        public bool isTrash(int NoteId, int Id);
     }
 }
