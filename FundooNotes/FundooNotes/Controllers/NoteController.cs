@@ -222,7 +222,7 @@ namespace FundooNotes.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("Image")]
         public IActionResult Image(int noteid, IFormFile file) {
 
