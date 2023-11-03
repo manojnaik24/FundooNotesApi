@@ -1,5 +1,7 @@
 ﻿using CommonLayer.Models;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer.Entity;
+using System;
 using System.Collections.Generic;
 
 namespace RepositoryLayer.Interfaces
@@ -18,5 +20,13 @@ namespace RepositoryLayer.Interfaces
 
         public bool isArchieve(int NoteId, int Id);
         public bool isTrash(int NoteId, int Id);
+
+        public bool DeleteAll(int NoteId);
+
+        public NoteEntity Colour(int NoteId, string Colour);
+
+        public NoteEntity Reminder(int NoteId, DateTime re,int Id);
+
+        public string uploadImage(int noteId, int id, IFormFile file);
     }
 }

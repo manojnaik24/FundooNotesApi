@@ -1,5 +1,6 @@
 ﻿using BussinessLayer.Interfaces;
 using CommonLayer.Models;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interfaces;
 using System;
@@ -45,6 +46,26 @@ namespace BussinessLayer.Services
         public bool isTrash(int NoteId, int Id)
         {
             return noteRepo.isTrash(NoteId,Id);
+        }
+
+        public bool DeleteAll(int NoteId)
+        {
+            return noteRepo.DeleteAll(NoteId);
+        }
+
+        public NoteEntity Colour(int NoteId, string Colour)
+        {
+            return noteRepo.Colour(NoteId, Colour);
+        }
+
+        public NoteEntity Reminder(int NoteId, DateTime re,int id)
+        {
+            return noteRepo.Reminder(NoteId, re,id);
+        }
+
+        public string uploadImage(int noteId, int id, IFormFile file)
+        {
+            return noteRepo.uploadImage(noteId, id, file);
         }
     }
 }

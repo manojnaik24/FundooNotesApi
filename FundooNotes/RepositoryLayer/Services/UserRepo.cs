@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Security.Claims;
 using System.Text;
 
@@ -165,6 +166,24 @@ namespace RepositoryLayer.Services
                 return false;
             }
         }
-      
+        public UserTicket CreateTick(string Email, String token)
+        {
+            var userTicket = fundooContext.user.FirstOrDefault(T => T.Email == Email);
+            if (userTicket != null)
+            {
+                UserTicket ticket = new UserTicket
+                {
+                    FirstName = userTicket.First_Name,
+                    LastName = userTicket.Last_Name,
+                    Email = Email,
+                    token = token,
+                    DateTime = DateTime.Now,
+                };
+                return ticket;
+            }
+            else { return null; }
+        }
+
+
     }
 }

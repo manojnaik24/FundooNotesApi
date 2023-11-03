@@ -2,6 +2,7 @@
 using BussinessLayer.Services;
 using CommonLayer.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
@@ -162,6 +163,83 @@ namespace FundooNotes.Controllers
                 return BadRequest(new ResponseModel<string> { status = false, message = "IsTrashs is undone " });
             }
         }
+        [HttpDelete]
+        [Route("DeleteAll")]
+        public IActionResult DeleteAll(int noteid)
+        {
 
+            logger.LogInformation("DeleteAll started");
+            int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+            var delete = noteBussines.delete(noteid, result);
+            if (delete != null)
+            {
+                logger.LogInformation("DeleteAll");
+                return Ok(new ResponseModel<string> { status = true, message = "all the detail is delete" });
+            }
+            else
+            {
+                logger.LogError("DeleteAll error");
+                return BadRequest(new ResponseModel<string> { status = false, message = "detail is not deleted " });
+            }
+        }
+
+        [HttpPut]
+        [Route("Colour")]
+        public IActionResult Colours(int noteid,string colour)
+        {
+
+            logger.LogInformation("Colour started");
+            int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+            var Colour = noteBussines.Colour(noteid,colour);
+            if (Colour != null)
+            {
+                logger.LogInformation("Colour");
+                return Ok(new ResponseModel<string> { status = true, message = "Colour  add successfull" });
+            }
+            else
+            {
+                logger.LogError("Colour error");
+                return BadRequest(new ResponseModel<string> { status = false, message = "Colour  not add " });
+            }
+        }
+        [HttpPut]
+        [Route("Reminder")]
+        public IActionResult Reminders(int noteid, DateTime dateTime,int Id)
+        {
+
+            logger.LogInformation("Reminder");
+            int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+            var rem = noteBussines.Reminder(noteid,dateTime,result);
+            if (rem != null)
+            {
+                logger.LogInformation("Colour");
+                return Ok(new ResponseModel<string> { status = true, message = "Reminder add successfull" });
+            }
+            else
+            {
+                logger.LogError("Colour error");
+                return BadRequest(new ResponseModel<string> { status = false, message = "Reminder not add " });
+            }
+        }
+
+        [HttpPost]
+        [Route("Image")]
+        public IActionResult Image(int noteid, IFormFile file) {
+
+            logger.LogInformation("image");
+            int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+            var im = noteBussines.uploadImage(noteid, result,file);
+            if (im != null)
+            {
+                logger.LogInformation("Image is upload");
+                return Ok(new ResponseModel<string> { status = true, message = "image is uploaded successfull" });
+            }
+            else
+            {
+                logger.LogError("faild to upload the image");
+                return BadRequest(new ResponseModel<string> { status = false, message = "image is not add " });
+            }
+
+        }
     }
 }

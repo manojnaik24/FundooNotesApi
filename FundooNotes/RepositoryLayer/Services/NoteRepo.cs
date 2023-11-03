@@ -1,14 +1,20 @@
-﻿using CommonLayer.Models;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using CommonLayer.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interfaces;
 using RepositoryLayer.Migrations;
+using SixLabors.ImageSharp.Memory;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 using System.Text;
 
 namespace RepositoryLayer.Services
@@ -80,6 +86,7 @@ namespace RepositoryLayer.Services
                 {
                     result.Image = note.Image;
                 }
+
                
                 result.Modifieder=DateTime.Now;
                 fundooContext.SaveChanges();
@@ -178,6 +185,79 @@ namespace RepositoryLayer.Services
                 return false;
             }
         }
+
+        public bool DeleteAll(int NoteId)
+        {
+            var result=fundooContext.Note.FirstOrDefault(x => x.NoteId == NoteId);
+            if (result.IsTrash==true)
+            {
+                fundooContext.Remove(result);
+                fundooContext.SaveChanges();
+                return false;
+            }
+            result.IsTrash = true;
+            fundooContext.SaveChanges() ;
+            return true;
+        }
+
+        public NoteEntity Colour(int NoteId,string Colour)
+        {
+            var note=fundooContext.Note.FirstOrDefault(n=>n.NoteId==NoteId);
+            if(note.Color!= null)
+            {
+                note.Color = Colour;
+                fundooContext.SaveChanges();
+                return note;
+            }
+            return null;
+        }
+
+        public NoteEntity Reminder(int NoteId,DateTime dateTime,int Id)
+        {
+            var reminder=fundooContext.Note.FirstOrDefault(m=>m.NoteId==NoteId && m.Id==Id);
+            if (reminder.Reminder!= null) {
+            reminder.Reminder= dateTime;
+                fundooContext.SaveChanges();
+                return reminder;
+            }
+            return null;
+        }
+        public string uploadImage(int noteId,int id,IFormFile img)
+        {
+            try
+            {
+                var result = fundooContext.Note.FirstOrDefault(i => i.NoteId == noteId && i.Id == id);
+                if (result != null)
+                {
+                    Account acc = new Account(
+                        "CloudinarySettings:CloudName",
+                        "CloudinarySettings:ApiKey",
+                        "CloudinarySettings:ApiSecret");
+
+                    Cloudinary cloudinary = new Cloudinary(acc);
+
+                    var ulP = new ImageUploadParams()
+                    {
+                        File = new FileDescription(img.FileName, img.OpenReadStream()),
+
+                    };
+                    var uploadResult = cloudinary.Upload(ulP);
+                    var imagepath = uploadResult.Url.ToString();
+                    result.Image = imagepath;
+                    fundooContext.SaveChanges();
+                    return "Image Uploaded Successfully";
+                }
+                else
+                {
+                    return null;
+                }
+            }catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        
+
 
     }
 }

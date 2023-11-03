@@ -52,5 +52,10 @@ namespace BussinessLayer.Services
             return userRepo.ResetPassword(Email, reset);
         }
 
+        public UserTicket CreateTick(string Email, String token)
+        {
+            return userRepo.CreateTick(Email, token);
+        }
+
     }
 }

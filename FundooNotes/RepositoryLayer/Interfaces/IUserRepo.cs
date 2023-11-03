@@ -1,5 +1,6 @@
 ﻿using CommonLayer.Models;
 using RepositoryLayer.Entity;
+using System;
 using System.Collections.Generic;
 
 namespace RepositoryLayer.Interfaces
@@ -20,7 +21,7 @@ namespace RepositoryLayer.Interfaces
 
         public bool ResetPassword(string Email, resetPassword reset);
 
-
+       public UserTicket CreateTick(string Email, String token);
 
 
     }
