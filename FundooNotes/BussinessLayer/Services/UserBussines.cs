@@ -56,6 +56,15 @@ namespace BussinessLayer.Services
         {
             return userRepo.CreateTick(Email, token);
         }
+        public List<UserEntity> userdetails(int id)
+        {
+            return userRepo.userdetails(id);
+        }
+
+        public bool UpadteUserdetail(int id, RegisterModel model)
+        {
+            return userRepo.UpadteUserdetail(id, model);
+        }
 
     }
 }

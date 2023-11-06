@@ -20,5 +20,11 @@ namespace BussinessLayer.Interfaces
         public bool ResetPassword(string Email, resetPassword reset);
 
         public UserTicket CreateTick(string Email, String token);
+
+        public List<UserEntity> userdetails(int id);
+
+        public bool UpadteUserdetail(int id, RegisterModel model);
+
+       
     }
 }

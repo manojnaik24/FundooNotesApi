@@ -3,16 +3,19 @@ using CloudinaryDotNet.Actions;
 using CommonLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interfaces;
-using RepositoryLayer.Migrations;
 using SixLabors.ImageSharp.Memory;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
@@ -22,17 +25,18 @@ namespace RepositoryLayer.Services
     public class NoteRepo : INoteRepo
     {
         private readonly FundoDbContext fundooContext;
+        private readonly IConfiguration configuration;
 
         public NoteRepo(FundoDbContext fundooContext)
         {
-           this.fundooContext = fundooContext;
+            this.fundooContext = fundooContext;
         }
 
-        public NoteEntity noteInput(NoteModel model,int Id)
+        public NoteEntity noteInput(NoteModel model, int Id)
         {
 
-        NoteEntity entity = new NoteEntity();
-            
+            NoteEntity entity = new NoteEntity();
+
             entity.Title = model.Title;
             entity.Note = model.Note;
             entity.UpdatedAt = model.UpdateAt;
@@ -42,21 +46,21 @@ namespace RepositoryLayer.Services
             entity.IsArchieve = model.IsArchieve;
             entity.IsPin = model.IsPin;
             entity.IsTrash = model.IsTrash;
-            entity.Reminder= model.Reminder;
-            entity.Id = Id; 
-           fundooContext.Note.Add(entity);
-           
-                var result = fundooContext.SaveChanges();
-                if (result > 0)
-                {
-                    return entity;
-                }
-                else
-                {
-                    return null;
-                }
-            
-            
+            entity.Reminder = model.Reminder;
+            entity.Id = Id;
+            fundooContext.Note.Add(entity);
+
+            var result = fundooContext.SaveChanges();
+            if (result > 0)
+            {
+                return entity;
+            }
+            else
+            {
+                return null;
+            }
+
+
         }
         public List<NoteEntity> PrintAllDetail()
         {
@@ -64,9 +68,9 @@ namespace RepositoryLayer.Services
             return result;
         }
 
-        public bool Upadate(int NoteId,int Id,NoteModel note)
+        public bool Upadate(int NoteId, int Id, NoteModel note)
         {
-            var result=fundooContext.Note.FirstOrDefault(x=>x.NoteId == NoteId && x.Id==Id);
+            var result = fundooContext.Note.FirstOrDefault(x => x.NoteId == NoteId && x.Id == Id);
 
             if (result != null)
             {
@@ -76,7 +80,7 @@ namespace RepositoryLayer.Services
                 }
                 if (note != null)
                 {
-                  result.Note = note.Note;
+                    result.Note = note.Note;
                 }
                 if (note.Color != null)
                 {
@@ -87,8 +91,8 @@ namespace RepositoryLayer.Services
                     result.Image = note.Image;
                 }
 
-               
-                result.Modifieder=DateTime.Now;
+
+                result.Modifieder = DateTime.Now;
                 fundooContext.SaveChanges();
                 return true;
             }
@@ -97,9 +101,9 @@ namespace RepositoryLayer.Services
                 return false;
             }
         }
-        public bool delete(int NoteId,int Id) { 
+        public bool delete(int NoteId, int Id) {
 
-            var result=fundooContext.Note.FirstOrDefault(x=>x.NoteId==NoteId && x.Id==Id);
+            var result = fundooContext.Note.FirstOrDefault(x => x.NoteId == NoteId && x.Id == Id);
             if (result != null)
             {
                 fundooContext.Note.Remove(result);
@@ -111,10 +115,10 @@ namespace RepositoryLayer.Services
                 return false;
             }
         }
-        public bool isPin(int NoteId,int Id) { 
-         
-            var result=fundooContext.Note.FirstOrDefault(y=>y.NoteId==NoteId);
-            if(result != null)
+        public bool isPin(int NoteId, int Id) {
+
+            var result = fundooContext.Note.FirstOrDefault(y => y.NoteId == NoteId);
+            if (result != null)
             {
                 if (result.IsPin == true)
                 {
@@ -188,22 +192,22 @@ namespace RepositoryLayer.Services
 
         public bool DeleteAll(int NoteId)
         {
-            var result=fundooContext.Note.FirstOrDefault(x => x.NoteId == NoteId);
-            if (result.IsTrash==true)
+            var result = fundooContext.Note.FirstOrDefault(x => x.NoteId == NoteId);
+            if (result.IsTrash == true)
             {
                 fundooContext.Remove(result);
                 fundooContext.SaveChanges();
                 return false;
             }
             result.IsTrash = true;
-            fundooContext.SaveChanges() ;
+            fundooContext.SaveChanges();
             return true;
         }
 
-        public NoteEntity Colour(int NoteId,string Colour)
+        public NoteEntity Colour(int NoteId, string Colour)
         {
-            var note=fundooContext.Note.FirstOrDefault(n=>n.NoteId==NoteId);
-            if(note.Color!= null)
+            var note = fundooContext.Note.FirstOrDefault(n => n.NoteId == NoteId);
+            if (note.Color != null)
             {
                 note.Color = Colour;
                 fundooContext.SaveChanges();
@@ -212,17 +216,17 @@ namespace RepositoryLayer.Services
             return null;
         }
 
-        public NoteEntity Reminder(int NoteId,DateTime dateTime,int Id)
+        public NoteEntity Reminder(int NoteId, DateTime dateTime)
         {
-            var reminder=fundooContext.Note.FirstOrDefault(m=>m.NoteId==NoteId && m.Id==Id);
-            if (reminder.Reminder!= null) {
-            reminder.Reminder= dateTime;
+            var reminder = fundooContext.Note.FirstOrDefault(m => m.NoteId == NoteId );
+            if (reminder.Reminder != null) {
+                reminder.Reminder = dateTime;
                 fundooContext.SaveChanges();
                 return reminder;
             }
             return null;
         }
-        public string uploadImage(int noteId,int id,IFormFile img)
+        public string uploadImage(int noteId, int id, IFormFile img)
         {
             try
             {
@@ -251,13 +255,48 @@ namespace RepositoryLayer.Services
                 {
                     return null;
                 }
-            }catch (Exception ex)
+            } catch (Exception ex)
             {
                 return ex.Message;
             }
         }
-        
+
+        public NoteEntity display(int noteId,int id)
+        {
+            var result = fundooContext.Note.FirstOrDefault(x => x.NoteId == noteId && x.Id==id);
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        private string GenerateToken(string tital, int noteId)
+        {
 
 
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim("Tital",tital),
+                new Claim("noteId",noteId.ToString())
+            };
+            var token = new JwtSecurityToken(configuration["Jwt:Issuer"],
+                configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: credentials);
+
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+
+
+        }
     }
+
+
 }

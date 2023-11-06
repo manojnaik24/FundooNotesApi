@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using RepositoryLayer.Entity;
-using RepositoryLayer.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -204,12 +203,12 @@ namespace FundooNotes.Controllers
         }
         [HttpPut]
         [Route("Reminder")]
-        public IActionResult Reminders(int noteid, DateTime dateTime,int Id)
+        public IActionResult Reminders(int noteid, DateTime dateTime)
         {
 
             logger.LogInformation("Reminder");
             int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
-            var rem = noteBussines.Reminder(noteid,dateTime,result);
+            var rem = noteBussines.Reminder(noteid,dateTime);
             if (rem != null)
             {
                 logger.LogInformation("Colour");
@@ -228,18 +227,37 @@ namespace FundooNotes.Controllers
 
             logger.LogInformation("image");
             int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
-            var im = noteBussines.uploadImage(noteid, result,file);
+            String im = noteBussines.uploadImage(noteid,result ,file);
             if (im != null)
             {
                 logger.LogInformation("Image is upload");
-                return Ok(new ResponseModel<string> { status = true, message = "image is uploaded successfull" });
+                return Ok(new ResponseModel<IFormFile> { status = true, message = "image is uploaded successfull" });
             }
             else
             {
                 logger.LogError("faild to upload the image");
-                return BadRequest(new ResponseModel<string> { status = false, message = "image is not add " });
+                return BadRequest(new ResponseModel<IFormFile> { status = false, message = "image is not add " });
             }
 
+        }
+        [HttpGet]
+        [Route("Print Note")]
+        public IActionResult Print(int noteId)
+        {
+            logger.LogInformation("Print all the note");
+            int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+            NoteEntity mt = noteBussines.display(noteId, result);
+
+            if (mt != null)
+            {
+                logger.LogInformation("all deatil");
+                return Ok(new ResponseModel<NoteEntity> { status = true, message = "Note is view detail" });
+            }
+            else
+            {
+                logger.LogError("not detail");
+                return BadRequest(new ResponseModel<NoteEntity> { status = false, message = "note detail is not view" });
+            }
         }
     }
 }

@@ -6,9 +6,9 @@ using NPOI.SS.Formula.Functions;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interfaces;
-using RepositoryLayer.Migrations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -55,7 +55,7 @@ namespace RepositoryLayer.Services
             var encodePwd= EncryptPassword(login.Password);
             
             UserEntity checkEmail = fundooContext.user.FirstOrDefault(x => x.Email == login.EMail);
-            UserEntity checkpass = fundooContext.user.FirstOrDefault(x=>x.Password == login.Password);
+            UserEntity checkpass = fundooContext.user.FirstOrDefault(x=>x.Password == encodePwd);
 
             if (checkEmail != null)
             {
@@ -183,7 +183,35 @@ namespace RepositoryLayer.Services
             }
             else { return null; }
         }
+        public List<UserEntity> userdetails(int id)
+        {
+            List<UserEntity> re = (List<UserEntity>)fundooContext.user.Where(i=>i.Id == id).ToList();
+            return re;
+        }
+        public bool UpadteUserdetail(int id, RegisterModel model)
+        {
+                UserEntity re = fundooContext.user.FirstOrDefault(i => i.Id == id);
+                if (re.First_Name!= null)
+                {
+                    re.First_Name = model.First_Name;
 
+                }
+                if (re.Last_Name != null)
+                {
+                    re.Last_Name = model.Last_Name;
+                }
+            if (re.Email != null)
+            {
+                re.Email = model.Email;
+            }
+            if (re.Password != null)
+            {
+                re.Password = model.Password;
+            }
 
+                fundooContext.SaveChanges();
+                return true;
+           
+        }
     }
 }

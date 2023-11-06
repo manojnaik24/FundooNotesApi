@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RepositoryLayer.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -129,7 +130,45 @@ namespace FundooNotes.Controllers
             }
 
         }
-        
+        [HttpGet]
+        [Route("User Detail")]
+
+        public IActionResult Detail(int id)
+        {
+            logger.LogInformation("User Info");
+            List<UserEntity> result = userBuissnes.userdetails(id);
+
+            if (result != null)
+            {
+                logger.LogInformation("User detail");
+                return Ok(new ResponseModel<List<UserEntity>> { status = true, message = "user details", data = result });
+            }
+            else
+            {
+                logger.LogError("No detail");
+                return BadRequest(new ResponseModel<List<UserEntity>> { status = false, message = "no details" });
+            }
+        }
+        [HttpPut]
+        [Route("Updated Detail")]
+
+        public IActionResult update( int id,RegisterModel model)
+        {
+            logger.LogInformation("Updated Detail");
+
+            var result = userBuissnes.UpadteUserdetail(id,model);
+
+            if (result != null)
+            {
+                logger.LogInformation("Update.....");
+                return Ok(new ResponseModel<string> { status = true, message = "user Updated successfull" });
+            }
+            else
+            {
+                logger.LogError("not update");
+                return BadRequest(new ResponseModel<string> { status = false, message = "data is not updated" });
+            }
+        }
     }
 
    

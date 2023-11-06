@@ -23,6 +23,10 @@ namespace RepositoryLayer.Interfaces
 
        public UserTicket CreateTick(string Email, String token);
 
+        public List<UserEntity> userdetails(int id);
+
+        public bool UpadteUserdetail(int id, RegisterModel model);
+
 
     }
 }

@@ -58,14 +58,19 @@ namespace BussinessLayer.Services
             return noteRepo.Colour(NoteId, Colour);
         }
 
-        public NoteEntity Reminder(int NoteId, DateTime re,int id)
+        public NoteEntity Reminder(int NoteId, DateTime re)
         {
-            return noteRepo.Reminder(NoteId, re,id);
+            return noteRepo.Reminder(NoteId, re);
         }
 
         public string uploadImage(int noteId, int id, IFormFile file)
         {
             return noteRepo.uploadImage(noteId, id, file);
+        }
+
+        public NoteEntity display(int noteId, int id)
+        {
+            return noteRepo.display(noteId, id);
         }
     }
 }

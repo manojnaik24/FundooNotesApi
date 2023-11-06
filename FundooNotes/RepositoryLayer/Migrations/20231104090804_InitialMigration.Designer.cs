@@ -10,8 +10,8 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(FundoDbContext))]
-    [Migration("20231101060923_note")]
-    partial class note
+    [Migration("20231104090804_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,31 @@ namespace RepositoryLayer.Migrations
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("RepositoryLayer.Entity.LabelEntity", b =>
+                {
+                    b.Property<int>("columnsid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("labelName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("columnsid");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("NoteId");
+
+                    b.ToTable("Label");
+                });
 
             modelBuilder.Entity("RepositoryLayer.Entity.NoteEntity", b =>
                 {
@@ -93,6 +118,21 @@ namespace RepositoryLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("user");
+                });
+
+            modelBuilder.Entity("RepositoryLayer.Entity.LabelEntity", b =>
+                {
+                    b.HasOne("RepositoryLayer.Entity.UserEntity", "user")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RepositoryLayer.Entity.NoteEntity", "Note")
+                        .WithMany()
+                        .HasForeignKey("NoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RepositoryLayer.Entity.NoteEntity", b =>

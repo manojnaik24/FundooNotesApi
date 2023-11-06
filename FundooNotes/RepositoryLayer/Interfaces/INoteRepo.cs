@@ -25,8 +25,10 @@ namespace RepositoryLayer.Interfaces
 
         public NoteEntity Colour(int NoteId, string Colour);
 
-        public NoteEntity Reminder(int NoteId, DateTime re,int Id);
+        public NoteEntity Reminder(int NoteId, DateTime re);
 
         public string uploadImage(int noteId, int id, IFormFile file);
+
+       public NoteEntity display(int noteId,int id);
     }
 }

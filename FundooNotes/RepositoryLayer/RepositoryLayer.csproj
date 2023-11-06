@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20231101060226_Notes.cs" />
-    <Compile Remove="Migrations\20231101060226_Notes.Designer.cs" />
-    <Compile Remove="Migrations\20231101060511_Note.cs" />
-    <Compile Remove="Migrations\20231101060511_Note.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CloudinaryDotNet" Version="1.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
