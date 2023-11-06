@@ -10,8 +10,8 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(FundoDbContext))]
-    [Migration("20231106105552_collaborator")]
-    partial class collaborator
+    [Migration("20231106114510_collab")]
+    partial class collab
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,17 +34,14 @@ namespace RepositoryLayer.Migrations
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("collaboratEmail")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("collaboratId");
 
-                    b.HasIndex("NoteId");
+                    b.HasIndex("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("NoteId");
 
                     b.ToTable("collaborat");
                 });
@@ -150,15 +147,17 @@ namespace RepositoryLayer.Migrations
 
             modelBuilder.Entity("RepositoryLayer.Entity.CollaboratEntity", b =>
                 {
+                    b.HasOne("RepositoryLayer.Entity.UserEntity", "user")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("RepositoryLayer.Entity.NoteEntity", "Note")
                         .WithMany()
                         .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("RepositoryLayer.Entity.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("RepositoryLayer.Entity.LabelEntity", b =>

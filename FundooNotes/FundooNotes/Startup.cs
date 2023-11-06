@@ -47,6 +47,8 @@ namespace FundooNotes
             services.AddTransient<INoteRepo, NoteRepo>();
             services.AddTransient<IlabelBussines,labelBussines>();
             services.AddTransient<IlabelRepo, labelRepo>();
+            services.AddTransient<ICollaboratorBussines,CollaboratorBussines>();
+            services.AddTransient<ICollaboratorRepo,CollaboratorRepo>();
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
