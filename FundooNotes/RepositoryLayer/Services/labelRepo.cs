@@ -19,14 +19,14 @@ namespace RepositoryLayer.Services
         }
 
 
-        public LabelEntity Addlabel(string labelName,int noteId,int id)
+        public LabelEntity Addlabel(int noteId, string labelName,int Id)
         {
 
             LabelEntity label = new LabelEntity();
             label.labelName=labelName;
-            label.Id = id;
-            label.NoteId = noteId;
-
+            label.NoteId=noteId;
+            label.Id = Id;
+           
             fundoDb.Label.Add(label);
             var re = fundoDb.SaveChanges();
 
@@ -48,23 +48,25 @@ namespace RepositoryLayer.Services
             return result;
         }
 
-        public bool UpdateLabel(string label,int noteId,int Id)
+        public bool UpdateLabel(int noteId, string label)
         {
-            var result=fundoDb.Label.FirstOrDefault(v=>v.labelName==label && v.Id==Id && v.NoteId==noteId );
+            var result=fundoDb.Label.FirstOrDefault(v=> v.NoteId==noteId );
             if (result.labelName != null)
             {
                 result.labelName=label;
+                fundoDb.SaveChanges();
                 return true;
             }
-            fundoDb.SaveChanges();
+          
             return false;
 
         }
-        public bool deleteLabel(string label,int noteId,int Id) {
+        public bool deleteLabel(int noteId, string label) {
 
-            var result = fundoDb.Label.FirstOrDefault(v => v.labelName == label && v.Id == Id && v.NoteId == noteId);
-            if (result.labelName != null) {
-            fundoDb.Remove(result.labelName);
+            var result = fundoDb.Label.FirstOrDefault(v =>  v.NoteId == noteId && v.labelName==label);
+            if (result != null) {
+            fundoDb.Label.Remove(result);
+                fundoDb.SaveChanges() ;
                 return true;
             }
             else
@@ -73,9 +75,9 @@ namespace RepositoryLayer.Services
             }
             
         }
-        public List<LabelEntity> getlabel(int columnsid)
+        public List<LabelEntity> getlabel(string label)
         {
-            List<LabelEntity> result = (List<LabelEntity>)fundoDb.Label.Where(m=>m.columnsid==columnsid);
+            List<LabelEntity> result = (List<LabelEntity>)fundoDb.Label.Where(m=>m.labelName==label );
             return result;
         }
 

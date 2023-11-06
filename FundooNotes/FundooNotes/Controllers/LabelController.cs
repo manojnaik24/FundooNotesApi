@@ -16,22 +16,22 @@ namespace FundooNotes.Controllers
     public class LabelController : ControllerBase
     {
         private readonly IlabelBussines ilabelBussines;
-        private readonly ILogger<NoteController> logger;
+        private readonly ILogger<LabelController> logger;
 
-        public LabelController(IlabelBussines ilabelBussines)
+        public LabelController(IlabelBussines ilabelBussines,ILogger<LabelController> logger)
         {
             this.ilabelBussines = ilabelBussines;
+            this.logger = logger;
         }
 
         [HttpPost]
         [Route("add Label")]
 
-        public IActionResult lable(string label)
+        public IActionResult lable(int noteId,string label)
         {
             logger.LogInformation("label is started.....");
-            var id = Convert.ToInt32(User.Claims.FirstOrDefault(m => m.Type == "Id" && m.Type == "noteId"));
-            // var noteid = Convert.ToInt32(User.Claims.FirstOrDefault(m => m.Type == "noteId"));
-            var lable = ilabelBussines.Addlabel(label, id);
+            var id=Convert.ToInt32(User.Claims.FirstOrDefault(m=>m.Type=="Id").Value);
+            var lable = ilabelBussines.Addlabel(noteId, label,id);
 
             if (label != null)
             {
@@ -67,13 +67,11 @@ namespace FundooNotes.Controllers
         [HttpPut]
         [Route("Update label")]
 
-        public IActionResult Updatelabel(string label)
+        public IActionResult Updatelabel(int noteid,string label)
         {
 
             logger.LogInformation("update");
-            var re = Convert.ToInt32(User.Claims.FirstOrDefault(m => m.Type == "Id"));
-            var noteid = Convert.ToInt32(Note.Claims.FirstOrDefault(m => m.Type == "noteId"));
-            var lable = ilabelBussines.UpdateLabel(label, re, noteid);
+            var lable = ilabelBussines.UpdateLabel(noteid,label);
             if (lable != null)
             {
                 logger.LogInformation("label is update");
@@ -90,12 +88,10 @@ namespace FundooNotes.Controllers
         [HttpDelete]
         [Route("Deleting label")]
 
-        public IActionResult Delete(string label)
+        public IActionResult Delete(int note, string label)
         {
             logger.LogInformation("deleting");
-            int result = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id"));
-            var noteid = Convert.ToInt32(Note.Claims.FirstOrDefault(m => m.Type == "noteId"));
-            var delete = ilabelBussines.deleteLabel(label, result, noteid);
+            var delete = ilabelBussines.deleteLabel(note, label);
             if (delete != null)
             {
                 logger.LogInformation("label the label");
@@ -109,12 +105,10 @@ namespace FundooNotes.Controllers
         }
         [HttpGet]
         [Route("Print label")]
-        public IActionResult Print(int noteId)
+        public IActionResult getlables(string label )
         {
             logger.LogInformation("Print label");
-            int id = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Value == "Id"));
-            var noteid = Convert.ToInt32(User.Claims.FirstOrDefault(m => m.Type == "noteId"));
-            LabelEntity mt = ilabelBussines.getlabel(noteId, noteid, id);
+           List< LabelEntity >mt = ilabelBussines.getlabel(label);
 
             if (mt != null)
             {

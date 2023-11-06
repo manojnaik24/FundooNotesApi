@@ -1,5 +1,6 @@
 using BussinessLayer.Interfaces;
 using BussinessLayer.Services;
+using CloudinaryDotNet;
 using FundooNotes.Controllers;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer.Context;
@@ -106,6 +108,7 @@ namespace FundooNotes
                 };
             });
 
+           
         }
 
 

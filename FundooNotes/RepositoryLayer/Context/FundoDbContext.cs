@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Octokit;
 using RepositoryLayer.Entity;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace RepositoryLayer.Context
         public DbSet<NoteEntity>Note { get; set; }
 
         public DbSet<LabelEntity> Label {  get; set; }
+
+        public DbSet<CollaboratEntity>collaborat { get; set; }
     }
 }

@@ -27,9 +27,10 @@ namespace RepositoryLayer.Services
         private readonly FundoDbContext fundooContext;
         private readonly IConfiguration configuration;
 
-        public NoteRepo(FundoDbContext fundooContext)
+        public NoteRepo(FundoDbContext fundooContext, IConfiguration configuration)
         {
             this.fundooContext = fundooContext;
+            this.configuration = configuration;
         }
 
         public NoteEntity noteInput(NoteModel model, int Id)
@@ -234,18 +235,18 @@ namespace RepositoryLayer.Services
                 if (result != null)
                 {
                     Account acc = new Account(
-                        "CloudinarySettings:CloudName",
-                        "CloudinarySettings:ApiKey",
-                        "CloudinarySettings:ApiSecret");
+                      configuration[ "CloudinarySettings:CloudName"],
+                      configuration[  "CloudinarySettings:ApiKey"],
+                      configuration[  "CloudinarySettings:ApiSecret"]);
 
                     Cloudinary cloudinary = new Cloudinary(acc);
 
-                    var ulP = new ImageUploadParams()
+                    var u = new ImageUploadParams()
                     {
                         File = new FileDescription(img.FileName, img.OpenReadStream()),
 
                     };
-                    var uploadResult = cloudinary.Upload(ulP);
+                    var uploadResult = cloudinary.Upload(u);
                     var imagepath = uploadResult.Url.ToString();
                     result.Image = imagepath;
                     fundooContext.SaveChanges();
@@ -274,28 +275,7 @@ namespace RepositoryLayer.Services
             }
 
         }
-        private string GenerateToken(string tital, int noteId)
-        {
-
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim("Tital",tital),
-                new Claim("noteId",noteId.ToString())
-            };
-            var token = new JwtSecurityToken(configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: credentials);
-
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-
-
-        }
+        
     }
 
 

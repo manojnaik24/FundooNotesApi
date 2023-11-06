@@ -16,26 +16,26 @@ namespace BussinessLayer.Services
             this.labelRepo = labelRepo;
         }
 
-        public LabelEntity Addlabel(string name, int noteId, int id)
+        public LabelEntity Addlabel(int noteId, string name,int id)
         {
-            return labelRepo.Addlabel(name, noteId, id);
+            return labelRepo.Addlabel(noteId, name,id);
         }
         public List<LabelEntity> PrintAllDetail()
         {
            return labelRepo.PrintAllDetail();
         }
-        public bool UpdateLabel(string label, int noteId, int Id)
+        public bool UpdateLabel(int noteId,string label)
         {
-            return labelRepo.UpdateLabel(label, noteId, Id);
+            return labelRepo.UpdateLabel(noteId, label);
         }
-        public bool deleteLabel(string label, int noteId, int Id)
+        public bool deleteLabel( int noteId,string label)
         {
-            return labelRepo.deleteLabel(label, noteId, Id);
+            return labelRepo.deleteLabel(noteId,label );
         }
 
-        public List<LabelEntity> getlabel(int columnsid)
+        public List<LabelEntity> getlabel(string label )
         {
-            return labelRepo.getlabel(columnsid);
+            return labelRepo.getlabel(label );
         }
     }
 }

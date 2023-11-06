@@ -231,12 +231,12 @@ namespace FundooNotes.Controllers
             if (im != null)
             {
                 logger.LogInformation("Image is upload");
-                return Ok(new ResponseModel<IFormFile> { status = true, message = "image is uploaded successfull" });
+                return Ok(new ResponseModel<string> { status = true, message = "image is uploaded successfull" });
             }
             else
             {
                 logger.LogError("faild to upload the image");
-                return BadRequest(new ResponseModel<IFormFile> { status = false, message = "image is not add " });
+                return BadRequest(new ResponseModel<string> { status = false, message = "image is not add " });
             }
 
         }
